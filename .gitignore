@@ -1,13 +1,43 @@
+<<<<<<< HEAD
+=======
+/.idea
+/vendor/
+
+###> shopware/core ###
+.env.local
+.env.local.php
+.env.*.local
+/public/bundles/*
+/public/media/*
+/public/theme/*
+/public/thumbnail/*
+/public/sitemap/*
+/files/*
+!/files/.htaccess
+/var/*
+!/var/.htaccess
+/auth.json
+/install.lock
+/public/asset-manifest.json
+###< shopware/core ###
+
+>>>>>>> master
 # Devenv
 .devenv*
 devenv.local.nix
 devenv.local.yaml
+<<<<<<< HEAD
 devenv.lock
+=======
+>>>>>>> master
 
 # direnv
 .direnv
 
 # pre-commit
 .pre-commit-config.yaml
+<<<<<<< HEAD
 
 .idea/
+=======
+>>>>>>> master
