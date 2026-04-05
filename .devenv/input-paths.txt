@@ -1,0 +1,10 @@
+/home/linux_user/.config/nixpkgs/overlays
+/home/linux_user/.config/nixpkgs/overlays.nix
+/home/linux_user/code/shopware6/.devenv/bootstrap/bootstrapLib.nix
+/home/linux_user/code/shopware6/.devenv/bootstrap/default.nix
+/home/linux_user/code/shopware6/.devenv/bootstrap/resolve-lock.nix
+/home/linux_user/code/shopware6/devenv.local.nix
+/home/linux_user/code/shopware6/devenv.lock
+/home/linux_user/code/shopware6/devenv.nix
+/home/linux_user/code/shopware6/devenv.yaml
+/home/linux_user/code/shopware6/.env

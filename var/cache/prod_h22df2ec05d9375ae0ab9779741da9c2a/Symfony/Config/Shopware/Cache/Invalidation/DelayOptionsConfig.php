@@ -1,0 +1,75 @@
+<?php
+
+namespace Symfony\Config\Shopware\Cache\Invalidation;
+
+use Symfony\Component\Config\Loader\ParamConfigurator;
+use Symfony\Component\Config\Definition\Exception\InvalidConfigurationException;
+
+/**
+ * This class is automatically generated to help in creating a config.
+ */
+class DelayOptionsConfig 
+{
+    private $storage;
+    private $connection;
+    private $_usedProperties = [];
+
+    /**
+     * @default 'mysql'
+     * @param ParamConfigurator|mixed $value
+     * @return $this
+     */
+    public function storage($value): static
+    {
+        $this->_usedProperties['storage'] = true;
+        $this->storage = $value;
+
+        return $this;
+    }
+
+    /**
+     * @default null
+     * @param ParamConfigurator|mixed $value
+     * @return $this
+     */
+    public function connection($value): static
+    {
+        $this->_usedProperties['connection'] = true;
+        $this->connection = $value;
+
+        return $this;
+    }
+
+    public function __construct(array $config = [])
+    {
+        if (array_key_exists('storage', $config)) {
+            $this->_usedProperties['storage'] = true;
+            $this->storage = $config['storage'];
+            unset($config['storage']);
+        }
+
+        if (array_key_exists('connection', $config)) {
+            $this->_usedProperties['connection'] = true;
+            $this->connection = $config['connection'];
+            unset($config['connection']);
+        }
+
+        if ($config) {
+            throw new InvalidConfigurationException(sprintf('The following keys are not supported by "%s": ', __CLASS__).implode(', ', array_keys($config)));
+        }
+    }
+
+    public function toArray(): array
+    {
+        $output = [];
+        if (isset($this->_usedProperties['storage'])) {
+            $output['storage'] = $this->storage;
+        }
+        if (isset($this->_usedProperties['connection'])) {
+            $output['connection'] = $this->connection;
+        }
+
+        return $output;
+    }
+
+}

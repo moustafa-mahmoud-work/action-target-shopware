@@ -1,0 +1,23 @@
+.sw-settings-document-detail {
+    .sw-settings-document-detail__select-type {
+        margin-bottom: 0;
+    }
+
+    &__form-field-renderer,
+    .sw-form-field-renderer.sw-select,
+    .sw-field--text,
+    .sw-field--checkbox {
+        margin-bottom: var(--scale-size-22);
+    }
+
+    .sw-field--checkbox {
+        &__content {
+            align-items: center;
+            height: 100%;
+        }
+    }
+
+    .sw-multi-select .sw-select-selection-list__input-wrapper > .sw-select-selection-list__input {
+        min-width: 0;
+    }
+}
