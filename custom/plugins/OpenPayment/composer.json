@@ -1,0 +1,27 @@
+{
+    "name": "swag-open-payment/open-payment",
+    "description": "swag-open-payment/open-payment",
+    "type": "shopware-platform-plugin",
+    "version": "1.0.0",
+    "license": "MIT",
+    "require": {
+        "shopware/core": "~6.7.0"
+    },
+    "extra": {
+        "shopware-plugin-class": "Swag\\OpenPayment\\OpenPayment",
+        "label": {
+            "de-DE": "Skeleton plugin",
+            "en-GB": "Skeleton plugin"
+        }
+    },
+    "autoload": {
+        "psr-4": {
+            "Swag\\OpenPayment\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Swag\\OpenPayment\\Tests\\": "tests/"
+        }
+    }
+}
