@@ -1,0 +1,254 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="https://raw.githubusercontent.com/shopware/platform/trunk/src/Core/System/SystemConfig/Schema/config.xsd">
+
+    <card>
+        <title>PaymentGate API Credentials</title>
+        <title lang="de-DE">PaymentGate API-Anmeldeinformationen</title>
+
+        <input-field type="password">
+            <name>apiKey</name>
+            <label>API Key</label>
+            <label lang="de-DE">API-Schlüssel</label>
+            <helpText>Your PaymentGate API key from the merchant dashboard</helpText>
+            <helpText lang="de-DE">Ihr PaymentGate API-Schlüssel aus dem Händler-Dashboard</helpText>
+            <required>true</required>
+        </input-field>
+
+        <input-field type="password">
+            <name>apiSecret</name>
+            <label>API Secret</label>
+            <label lang="de-DE">API-Geheimnis</label>
+            <helpText>Your PaymentGate API secret from the merchant dashboard</helpText>
+            <helpText lang="de-DE">Ihr PaymentGate API-Geheimnis aus dem Händler-Dashboard</helpText>
+            <required>true</required>
+        </input-field>
+
+        <input-field type="single-select">
+            <name>environment</name>
+            <label>Environment</label>
+            <label lang="de-DE">Umgebung</label>
+            <options>
+                <option>
+                    <id>sandbox</id>
+                    <name>Sandbox (Testing)</name>
+                    <name lang="de-DE">Sandbox (Test)</name>
+                </option>
+                <option>
+                    <id>production</id>
+                    <name>Production (Live)</name>
+                    <name lang="de-DE">Produktion (Live)</name>
+                </option>
+            </options>
+            <defaultValue>sandbox</defaultValue>
+        </input-field>
+
+        <input-field type="text">
+            <name>webhookSecret</name>
+            <label>Webhook Secret</label>
+            <label lang="de-DE">Webhook-Geheimnis</label>
+            <helpText>Secret key for validating webhook signatures</helpText>
+            <helpText lang="de-DE">Geheimer Schlüssel zur Validierung von Webhook-Signaturen</helpText>
+        </input-field>
+    </card>
+
+    <card>
+        <title>Payment Behavior</title>
+        <title lang="de-DE">Zahlungsverhalten</title>
+
+        <input-field type="single-select">
+            <name>authorizationMode</name>
+            <label>Authorization Mode</label>
+            <label lang="de-DE">Autorisierungsmodus</label>
+            <helpText>Choose between authorize-only or authorize-and-capture</helpText>
+            <helpText lang="de-DE">Wählen Sie zwischen nur autorisieren oder autorisieren und erfassen</helpText>
+            <options>
+                <option>
+                    <id>authorize_only</id>
+                    <name>Authorize Only (Capture Later)</name>
+                    <name lang="de-DE">Nur autorisieren (später erfassen)</name>
+                </option>
+                <option>
+                    <id>authorize_capture</id>
+                    <name>Authorize and Capture Immediately</name>
+                    <name lang="de-DE">Sofort autorisieren und erfassen</name>
+                </option>
+            </options>
+            <defaultValue>authorize_only</defaultValue>
+        </input-field>
+
+        <input-field type="bool">
+            <name>enableSavedCards</name>
+            <label>Enable Saved Payment Methods</label>
+            <label lang="de-DE">Gespeicherte Zahlungsmethoden aktivieren</label>
+            <helpText>Allow customers to save payment methods for future use</helpText>
+            <helpText lang="de-DE">Kunden erlauben, Zahlungsmethoden für zukünftige Verwendung zu speichern</helpText>
+            <defaultValue>true</defaultValue>
+        </input-field>
+
+        <input-field type="int">
+            <name>authorizationExpiryDays</name>
+            <label>Authorization Expiry (Days)</label>
+            <label lang="de-DE">Autorisierungsablauf (Tage)</label>
+            <helpText>Number of days before an authorization expires</helpText>
+            <helpText lang="de-DE">Anzahl der Tage bis zum Ablauf einer Autorisierung</helpText>
+            <defaultValue>7</defaultValue>
+            <min>1</min>
+            <max>30</max>
+        </input-field>
+
+        <input-field type="bool">
+            <name>enableTestMode</name>
+            <label>Enable Test Mode</label>
+            <label lang="de-DE">Testmodus aktivieren</label>
+            <helpText>Process payments in test mode (no real charges)</helpText>
+            <helpText lang="de-DE">Zahlungen im Testmodus verarbeiten (keine echten Belastungen)</helpText>
+            <defaultValue>false</defaultValue>
+        </input-field>
+    </card>
+
+    <card>
+        <title>Sage Integration</title>
+        <title lang="de-DE">Sage-Integration</title>
+
+        <input-field type="text">
+            <name>sageApiUrl</name>
+            <label>Sage API URL</label>
+            <label lang="de-DE">Sage API-URL</label>
+            <helpText>Base URL for Sage API integration</helpText>
+            <helpText lang="de-DE">Basis-URL für Sage API-Integration</helpText>
+            <placeholder>https://api.sage.actiontarget.com/v1</placeholder>
+        </input-field>
+
+        <input-field type="password">
+            <name>sageApiKey</name>
+            <label>Sage API Key</label>
+            <label lang="de-DE">Sage API-Schlüssel</label>
+            <helpText>API key for authenticating with Sage</helpText>
+            <helpText lang="de-DE">API-Schlüssel zur Authentifizierung bei Sage</helpText>
+        </input-field>
+
+        <input-field type="bool">
+            <name>enableSageSync</name>
+            <label>Enable Sage Synchronization</label>
+            <label lang="de-DE">Sage-Synchronisation aktivieren</label>
+            <helpText>Automatically sync payment data with Sage ERP</helpText>
+            <helpText lang="de-DE">Zahlungsdaten automatisch mit Sage ERP synchronisieren</helpText>
+            <defaultValue>true</defaultValue>
+        </input-field>
+
+        <input-field type="int">
+            <name>sageSyncRetryAttempts</name>
+            <label>Sync Retry Attempts</label>
+            <label lang="de-DE">Sync-Wiederholungsversuche</label>
+            <helpText>Number of retry attempts for failed sync operations</helpText>
+            <helpText lang="de-DE">Anzahl der Wiederholungsversuche für fehlgeschlagene Sync-Vorgänge</helpText>
+            <defaultValue>3</defaultValue>
+            <min>0</min>
+            <max>10</max>
+        </input-field>
+
+        <input-field type="text">
+            <name>sageWebhookSecret</name>
+            <label>Sage Webhook Secret</label>
+            <label lang="de-DE">Sage Webhook-Geheimnis</label>
+            <helpText>Secret key for validating Sage webhook signatures</helpText>
+            <helpText lang="de-DE">Geheimer Schlüssel zur Validierung von Sage-Webhook-Signaturen</helpText>
+        </input-field>
+    </card>
+
+    <card>
+        <title>Payment Method Availability</title>
+        <title lang="de-DE">Verfügbarkeit der Zahlungsmethoden</title>
+
+        <input-field type="bool">
+            <name>enableCreditCard</name>
+            <label>Enable Credit Card Payments</label>
+            <label lang="de-DE">Kreditkartenzahlungen aktivieren</label>
+            <helpText>Accept credit card payments via PaymentGate</helpText>
+            <helpText lang="de-DE">Kreditkartenzahlungen über PaymentGate akzeptieren</helpText>
+            <defaultValue>true</defaultValue>
+        </input-field>
+
+        <input-field type="bool">
+            <name>enableNet30</name>
+            <label>Enable Net 30 Terms</label>
+            <label lang="de-DE">Net 30 Bedingungen aktivieren</label>
+            <helpText>Allow eligible B2B customers to use Net 30 payment terms</helpText>
+            <helpText lang="de-DE">Berechtigten B2B-Kunden erlauben, Net 30 Zahlungsbedingungen zu nutzen</helpText>
+            <defaultValue>false</defaultValue>
+        </input-field>
+
+        <input-field type="bool">
+            <name>enableWireTransfer</name>
+            <label>Enable Wire Transfer</label>
+            <label lang="de-DE">Überweisung aktivieren</label>
+            <helpText>Allow wire transfer for international or large orders</helpText>
+            <helpText lang="de-DE">Überweisung für internationale oder große Bestellungen erlauben</helpText>
+            <defaultValue>false</defaultValue>
+        </input-field>
+
+        <input-field type="bool">
+            <name>enableAch</name>
+            <label>Enable ACH/Bank Account</label>
+            <label lang="de-DE">ACH/Bankkonto aktivieren</label>
+            <helpText>Accept ACH/bank account payments (future feature)</helpText>
+            <helpText lang="de-DE">ACH/Bankkonto-Zahlungen akzeptieren (zukünftige Funktion)</helpText>
+            <defaultValue>false</defaultValue>
+        </input-field>
+    </card>
+
+    <card>
+        <title>Advanced Settings</title>
+        <title lang="de-DE">Erweiterte Einstellungen</title>
+
+        <input-field type="bool">
+            <name>enableLogging</name>
+            <label>Enable Detailed Logging</label>
+            <label lang="de-DE">Detaillierte Protokollierung aktivieren</label>
+            <helpText>Log all payment transactions and API calls (recommended for debugging)</helpText>
+            <helpText lang="de-DE">Alle Zahlungstransaktionen und API-Aufrufe protokollieren (empfohlen für Debugging)</helpText>
+            <defaultValue>true</defaultValue>
+        </input-field>
+
+        <input-field type="int">
+            <name>apiTimeout</name>
+            <label>API Timeout (seconds)</label>
+            <label lang="de-DE">API-Timeout (Sekunden)</label>
+            <helpText>Maximum time to wait for API responses</helpText>
+            <helpText lang="de-DE">Maximale Wartezeit für API-Antworten</helpText>
+            <defaultValue>30</defaultValue>
+            <min>5</min>
+            <max>120</max>
+        </input-field>
+
+        <input-field type="bool">
+            <name>enablePartialCapture</name>
+            <label>Enable Partial Capture</label>
+            <label lang="de-DE">Teilerfassung aktivieren</label>
+            <helpText>Allow capturing less than the authorized amount</helpText>
+            <helpText lang="de-DE">Erfassung von weniger als dem autorisierten Betrag erlauben</helpText>
+            <defaultValue>true</defaultValue>
+        </input-field>
+
+        <input-field type="bool">
+            <name>enablePartialRefund</name>
+            <label>Enable Partial Refund</label>
+            <label lang="de-DE">Teilrückerstattung aktivieren</label>
+            <helpText>Allow refunding less than the captured amount</helpText>
+            <helpText lang="de-DE">Rückerstattung von weniger als dem erfassten Betrag erlauben</helpText>
+            <defaultValue>true</defaultValue>
+        </input-field>
+
+        <input-field type="text">
+            <name>customErrorMessage</name>
+            <label>Custom Error Message</label>
+            <label lang="de-DE">Benutzerdefinierte Fehlermeldung</label>
+            <helpText>Custom message to display when payment fails</helpText>
+            <helpText lang="de-DE">Benutzerdefinierte Nachricht bei Zahlungsfehlern</helpText>
+            <placeholder>We're sorry, but your payment could not be processed. Please try again or contact support.</placeholder>
+        </input-field>
+    </card>
+</config>
+
+<!-- Made with Bob -->

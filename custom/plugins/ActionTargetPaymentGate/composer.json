@@ -1,0 +1,44 @@
+{
+    "name": "action-target/payment-gate",
+    "description": "PaymentGate integration for Action Target Shopware 6 - Supporting payment, order, quote, shipping, and Sage-related business flows",
+    "version": "1.0.0",
+    "type": "shopware-platform-plugin",
+    "license": "proprietary",
+    "authors": [
+        {
+            "name": "Action Target",
+            "role": "Developer"
+        }
+    ],
+    "require": {
+        "php": ">=8.2",
+        "shopware/core": "~6.7.0",
+        "guzzlehttp/guzzle": "^7.0",
+        "monolog/monolog": "^3.0"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^10.0",
+        "phpstan/phpstan": "^1.10"
+    },
+    "autoload": {
+        "psr-4": {
+            "ActionTarget\\PaymentGate\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "ActionTarget\\PaymentGate\\Tests\\": "tests/"
+        }
+    },
+    "extra": {
+        "shopware-plugin-class": "ActionTarget\\PaymentGate\\ActionTargetPaymentGate",
+        "label": {
+            "en-GB": "Action Target PaymentGate",
+            "de-DE": "Action Target PaymentGate"
+        },
+        "description": {
+            "en-GB": "Comprehensive payment integration supporting credit cards, Net 30, wire transfers, and Sage ERP synchronization",
+            "de-DE": "Umfassende Zahlungsintegration mit Unterstützung für Kreditkarten, Net 30, Überweisungen und Sage ERP-Synchronisation"
+        }
+    }
+}

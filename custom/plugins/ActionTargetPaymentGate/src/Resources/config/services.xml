@@ -1,0 +1,147 @@
+<?xml version="1.0" ?>
+<container xmlns="http://symfony.com/schema/dic/services"
+           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
+
+    <services>
+        <!-- Default service configuration -->
+        <defaults autowire="true" autoconfigure="true" public="false"/>
+
+        <!-- Register all services in the plugin -->
+        <prototype namespace="ActionTarget\PaymentGate\" resource="../../*">
+            <exclude>../../{Resources,Tests,Migration}</exclude>
+        </prototype>
+
+        <!-- Payment Handlers -->
+        <service id="ActionTarget\PaymentGate\Core\Checkout\Payment\PaymentHandler\CreditCardHandler">
+            <tag name="shopware.payment.method.async"/>
+        </service>
+
+        <service id="ActionTarget\PaymentGate\Core\Checkout\Payment\PaymentHandler\Net30Handler">
+            <tag name="shopware.payment.method.sync"/>
+        </service>
+
+        <service id="ActionTarget\PaymentGate\Core\Checkout\Payment\PaymentHandler\WireTransferHandler">
+            <tag name="shopware.payment.method.sync"/>
+        </service>
+
+        <service id="ActionTarget\PaymentGate\Core\Checkout\Payment\PaymentHandler\AchHandler">
+            <tag name="shopware.payment.method.async"/>
+        </service>
+
+        <!-- PaymentGate API Client -->
+        <service id="ActionTarget\PaymentGate\Service\PaymentGate\PaymentGateClient">
+            <argument type="service" id="Shopware\Core\System\SystemConfig\SystemConfigService"/>
+            <argument type="service" id="monolog.logger"/>
+        </service>
+
+        <!-- Sage Integration Services -->
+        <service id="ActionTarget\PaymentGate\Service\Sage\SageIntegrationService">
+            <argument type="service" id="Shopware\Core\System\SystemConfig\SystemConfigService"/>
+            <argument type="service" id="monolog.logger"/>
+        </service>
+
+        <service id="ActionTarget\PaymentGate\Service\Sage\SageSyncService">
+            <argument type="service" id="ActionTarget\PaymentGate\Service\Sage\SageIntegrationService"/>
+            <argument type="service" id="monolog.logger"/>
+        </service>
+
+        <!-- Transaction Services -->
+        <service id="ActionTarget\PaymentGate\Service\Transaction\TransactionService">
+            <argument type="service" id="action_target_payment_transaction.repository"/>
+            <argument type="service" id="monolog.logger"/>
+        </service>
+
+        <service id="ActionTarget\PaymentGate\Service\Transaction\TransactionLogger">
+            <argument type="service" id="action_target_payment_transaction.repository"/>
+            <argument type="service" id="monolog.logger"/>
+        </service>
+
+        <!-- Payment Routing -->
+        <service id="ActionTarget\PaymentGate\Service\Routing\PaymentRoutingService">
+            <argument type="service" id="action_target_payment_routing_rule.repository"/>
+            <argument type="service" id="customer.repository"/>
+        </service>
+
+        <!-- Saved Payment Methods -->
+        <service id="ActionTarget\PaymentGate\Service\SavedPaymentMethod\SavedPaymentMethodService">
+            <argument type="service" id="action_target_saved_payment_method.repository"/>
+            <argument type="service" id="ActionTarget\PaymentGate\Service\PaymentGate\PaymentGateClient"/>
+        </service>
+
+        <!-- Storefront Controllers -->
+        <service id="ActionTarget\PaymentGate\Storefront\Controller\PaymentController" public="true">
+            <argument type="service" id="ActionTarget\PaymentGate\Service\PaymentGate\PaymentGateClient"/>
+            <argument type="service" id="ActionTarget\PaymentGate\Service\Transaction\TransactionService"/>
+            <call method="setContainer">
+                <argument type="service" id="service_container"/>
+            </call>
+        </service>
+
+        <service id="ActionTarget\PaymentGate\Storefront\Controller\SavedPaymentMethodController" public="true">
+            <argument type="service" id="ActionTarget\PaymentGate\Service\SavedPaymentMethod\SavedPaymentMethodService"/>
+            <call method="setContainer">
+                <argument type="service" id="service_container"/>
+            </call>
+        </service>
+
+        <service id="ActionTarget\PaymentGate\Storefront\Controller\WebhookController" public="true">
+            <argument type="service" id="ActionTarget\PaymentGate\Service\PaymentGate\PaymentGateWebhookHandler"/>
+            <argument type="service" id="ActionTarget\PaymentGate\Service\Sage\SageWebhookHandler"/>
+            <call method="setContainer">
+                <argument type="service" id="service_container"/>
+            </call>
+        </service>
+
+        <!-- Administration Controllers -->
+        <service id="ActionTarget\PaymentGate\Administration\Controller\PaymentAdminController" public="true">
+            <argument type="service" id="ActionTarget\PaymentGate\Service\Transaction\TransactionService"/>
+            <argument type="service" id="ActionTarget\PaymentGate\Service\PaymentGate\PaymentGateCaptureService"/>
+            <argument type="service" id="ActionTarget\PaymentGate\Service\PaymentGate\PaymentGateRefundService"/>
+            <call method="setContainer">
+                <argument type="service" id="service_container"/>
+            </call>
+        </service>
+
+        <!-- Event Subscribers -->
+        <service id="ActionTarget\PaymentGate\Subscriber\OrderStateChangeSubscriber">
+            <argument type="service" id="ActionTarget\PaymentGate\Service\Sage\SageSyncService"/>
+            <tag name="kernel.event_subscriber"/>
+        </service>
+
+        <service id="ActionTarget\PaymentGate\Subscriber\PaymentStateChangeSubscriber">
+            <argument type="service" id="ActionTarget\PaymentGate\Service\Transaction\TransactionService"/>
+            <argument type="service" id="ActionTarget\PaymentGate\Service\Sage\SageSyncService"/>
+            <tag name="kernel.event_subscriber"/>
+        </service>
+
+        <!-- Webhook Handlers -->
+        <service id="ActionTarget\PaymentGate\Service\PaymentGate\PaymentGateWebhookHandler">
+            <argument type="service" id="ActionTarget\PaymentGate\Service\Transaction\TransactionService"/>
+            <argument type="service" id="Shopware\Core\System\SystemConfig\SystemConfigService"/>
+            <argument type="service" id="monolog.logger"/>
+        </service>
+
+        <service id="ActionTarget\PaymentGate\Service\Sage\SageWebhookHandler">
+            <argument type="service" id="ActionTarget\PaymentGate\Service\PaymentGate\PaymentGateCaptureService"/>
+            <argument type="service" id="ActionTarget\PaymentGate\Service\Transaction\TransactionService"/>
+            <argument type="service" id="Shopware\Core\System\SystemConfig\SystemConfigService"/>
+            <argument type="service" id="monolog.logger"/>
+        </service>
+
+        <!-- Capture and Refund Services -->
+        <service id="ActionTarget\PaymentGate\Service\PaymentGate\PaymentGateCaptureService">
+            <argument type="service" id="ActionTarget\PaymentGate\Service\PaymentGate\PaymentGateClient"/>
+            <argument type="service" id="ActionTarget\PaymentGate\Service\Transaction\TransactionService"/>
+            <argument type="service" id="monolog.logger"/>
+        </service>
+
+        <service id="ActionTarget\PaymentGate\Service\PaymentGate\PaymentGateRefundService">
+            <argument type="service" id="ActionTarget\PaymentGate\Service\PaymentGate\PaymentGateClient"/>
+            <argument type="service" id="ActionTarget\PaymentGate\Service\Transaction\TransactionService"/>
+            <argument type="service" id="monolog.logger"/>
+        </service>
+    </services>
+</container>
+
+<!-- Made with Bob -->
