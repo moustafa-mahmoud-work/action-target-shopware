@@ -1,0 +1,49 @@
+{% sw_extends '@Storefront/storefront/page/checkout/confirm/index.html.twig' %}
+
+{# Extend checkout confirm page with payment-specific functionality #}
+
+{% block page_checkout_confirm_payment %}
+    {{ parent() }}
+    
+    {# Add payment method specific content #}
+    {% if page.extension('actionTargetPaymentConfig') %}
+        <div class="action-target-payment-container" 
+             data-payment-config="{{ page.extension('actionTargetPaymentConfig')|json_encode|e('html_attr') }}">
+            
+            {# Credit Card Payment Form #}
+            {% if page.cart.transactions.first.paymentMethod.handlerIdentifier matches '/CreditCardHandler/' %}
+                {% include '@ActionTargetPaymentGate/storefront/component/payment/credit-card-form.html.twig' %}
+            {% endif %}
+            
+            {# Net 30 Payment Info #}
+            {% if page.cart.transactions.first.paymentMethod.handlerIdentifier matches '/Net30Handler/' %}
+                {% include '@ActionTargetPaymentGate/storefront/component/payment/net30-info.html.twig' %}
+            {% endif %}
+            
+            {# Saved Payment Methods #}
+            {% if page.extension('actionTargetSavedPaymentMethods') %}
+                {% include '@ActionTargetPaymentGate/storefront/component/payment/saved-payment-methods.html.twig' %}
+            {% endif %}
+        </div>
+    {% endif %}
+{% endblock %}
+
+{% block page_checkout_confirm_tos %}
+    {{ parent() }}
+    
+    {# Add payment-specific terms #}
+    <div class="payment-terms-notice">
+        <small class="text-muted">
+            {{ 'actionTarget.payment.securePaymentNotice'|trans }}
+        </small>
+    </div>
+{% endblock %}
+
+{# Add payment-specific JavaScript #}
+{% block base_script_router %}
+    {{ parent() }}
+    
+    <script src="{{ asset('bundles/actiontargetpaymentgate/storefront/js/payment-handler.js', 'asset') }}"></script>
+{% endblock %}
+
+{# @Author Moustafa M S #}

@@ -1,0 +1,45 @@
+{# Net 30 Payment Information #}
+
+<div class="net30-payment-info" data-net30-info>
+    <div class="card">
+        <div class="card-body">
+            <h5 class="card-title">
+                <i class="bi bi-calendar-check"></i>
+                {{ 'actionTarget.payment.net30.title'|trans }}
+            </h5>
+            
+            <div class="alert alert-info">
+                <p class="mb-2">
+                    <strong>{{ 'actionTarget.payment.net30.terms'|trans }}</strong>
+                </p>
+                <ul class="mb-0">
+                    <li>{{ 'actionTarget.payment.net30.paymentDue'|trans({'%days%': 30}) }}</li>
+                    <li>{{ 'actionTarget.payment.net30.invoiceSent'|trans }}</li>
+                    <li>{{ 'actionTarget.payment.net30.noInterest'|trans }}</li>
+                </ul>
+            </div>
+            
+            <div class="net30-details mt-3">
+                <div class="row">
+                    <div class="col-md-6">
+                        <p class="text-muted mb-1">{{ 'actionTarget.payment.net30.dueDate'|trans }}</p>
+                        <p class="fw-bold">{{ "now"|date_modify("+30 days")|date("F j, Y") }}</p>
+                    </div>
+                    <div class="col-md-6">
+                        <p class="text-muted mb-1">{{ 'actionTarget.payment.net30.orderTotal'|trans }}</p>
+                        <p class="fw-bold">{{ page.cart.price.totalPrice|currency }}</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="alert alert-warning mt-3">
+                <small>
+                    <i class="bi bi-exclamation-triangle"></i>
+                    {{ 'actionTarget.payment.net30.latePaymentWarning'|trans }}
+                </small>
+            </div>
+        </div>
+    </div>
+</div>
+
+{# @Author Moustafa M S #}

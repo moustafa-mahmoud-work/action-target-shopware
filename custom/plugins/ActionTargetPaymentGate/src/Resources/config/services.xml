@@ -12,21 +12,31 @@
             <exclude>../../{Resources,Tests,Migration}</exclude>
         </prototype>
 
-        <!-- Payment Handlers -->
+        <!-- Payment Handlers (Shopware 6.7+ unified tag) -->
         <service id="ActionTarget\PaymentGate\Core\Checkout\Payment\PaymentHandler\CreditCardHandler">
-            <tag name="shopware.payment.method.async"/>
+            <argument type="service" id="ActionTarget\PaymentGate\Service\PaymentGate\PaymentGateClient"/>
+            <argument type="service" id="ActionTarget\PaymentGate\Service\Transaction\TransactionService"/>
+            <argument type="service" id="Shopware\Core\Checkout\Order\Aggregate\OrderTransaction\OrderTransactionStateHandler"/>
+            <argument type="service" id="order.repository"/>
+            <argument type="service" id="order_transaction.repository"/>
+            <tag name="shopware.payment.method"/>
         </service>
 
         <service id="ActionTarget\PaymentGate\Core\Checkout\Payment\PaymentHandler\Net30Handler">
-            <tag name="shopware.payment.method.sync"/>
+            <argument type="service" id="ActionTarget\PaymentGate\Service\PaymentGate\PaymentGateClient"/>
+            <argument type="service" id="ActionTarget\PaymentGate\Service\Transaction\TransactionService"/>
+            <argument type="service" id="Shopware\Core\Checkout\Order\Aggregate\OrderTransaction\OrderTransactionStateHandler"/>
+            <argument type="service" id="order.repository"/>
+            <argument type="service" id="order_transaction.repository"/>
+            <tag name="shopware.payment.method"/>
         </service>
 
         <service id="ActionTarget\PaymentGate\Core\Checkout\Payment\PaymentHandler\WireTransferHandler">
-            <tag name="shopware.payment.method.sync"/>
+            <tag name="shopware.payment.method"/>
         </service>
 
         <service id="ActionTarget\PaymentGate\Core\Checkout\Payment\PaymentHandler\AchHandler">
-            <tag name="shopware.payment.method.async"/>
+            <tag name="shopware.payment.method"/>
         </service>
 
         <!-- PaymentGate API Client -->
@@ -69,9 +79,16 @@
             <argument type="service" id="ActionTarget\PaymentGate\Service\PaymentGate\PaymentGateClient"/>
         </service>
 
+        <!-- Storefront Page Loaders -->
+        <service id="ActionTarget\PaymentGate\Storefront\Page\Checkout\Confirm\CheckoutConfirmPaymentPageLoader">
+            <argument type="service" id="ActionTarget\PaymentGate\Service\SavedPaymentMethod\SavedPaymentMethodService"/>
+            <tag name="kernel.event_subscriber"/>
+        </service>
+
         <!-- Storefront Controllers -->
         <service id="ActionTarget\PaymentGate\Storefront\Controller\PaymentController" public="true">
             <argument type="service" id="ActionTarget\PaymentGate\Service\PaymentGate\PaymentGateClient"/>
+            <argument type="service" id="ActionTarget\PaymentGate\Service\SavedPaymentMethod\SavedPaymentMethodService"/>
             <argument type="service" id="ActionTarget\PaymentGate\Service\Transaction\TransactionService"/>
             <call method="setContainer">
                 <argument type="service" id="service_container"/>
@@ -144,4 +161,4 @@
     </services>
 </container>
 
-<!-- Made with Bob -->
+<!-- @Author Moustafa M S -->

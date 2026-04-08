@@ -110,4 +110,4 @@ class ActionTargetPaymentGate extends Plugin
     }
 }
 
-// Made with Bob
+// @Author Moustafa M S

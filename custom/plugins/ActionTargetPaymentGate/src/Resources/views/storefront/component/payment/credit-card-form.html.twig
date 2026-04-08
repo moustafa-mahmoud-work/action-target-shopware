@@ -1,0 +1,179 @@
+{# Credit Card Payment Form with PCI-compliant iframe #}
+
+<div class="credit-card-payment-form" data-credit-card-form>
+    <div class="card">
+        <div class="card-body">
+            <h5 class="card-title">{{ 'actionTarget.payment.creditCard.title'|trans }}</h5>
+            
+            {# Saved Cards Selection #}
+            {% if page.extension('actionTargetSavedPaymentMethods') and page.extension('actionTargetSavedPaymentMethods')|length > 0 %}
+                <div class="saved-cards-section mb-3">
+                    <label class="form-label">{{ 'actionTarget.payment.useSavedCard'|trans }}</label>
+                    <select class="form-select" data-saved-card-select>
+                        <option value="">{{ 'actionTarget.payment.useNewCard'|trans }}</option>
+                        {% for savedMethod in page.extension('actionTargetSavedPaymentMethods') %}
+                            <option value="{{ savedMethod.id }}" 
+                                    data-last4="{{ savedMethod.last4 }}"
+                                    data-brand="{{ savedMethod.brand }}">
+                                {{ savedMethod.brand|upper }} •••• {{ savedMethod.last4 }} 
+                                ({{ 'actionTarget.payment.expires'|trans }} {{ savedMethod.expMonth }}/{{ savedMethod.expYear }})
+                            </option>
+                        {% endfor %}
+                    </select>
+                </div>
+            {% endif %}
+            
+            {# New Card Entry via Iframe #}
+            <div class="new-card-section" data-new-card-section>
+                <div class="alert alert-info mb-3">
+                    <i class="bi bi-shield-check"></i>
+                    {{ 'actionTarget.payment.secureEntry'|trans }}
+                </div>
+                
+                {# PCI-compliant iframe for card entry #}
+                <div class="card-entry-iframe-container mb-3">
+                    <iframe 
+                        id="card-entry-iframe"
+                        src="{{ page.extension('actionTargetPaymentConfig').iframeUrl }}"
+                        frameborder="0"
+                        scrolling="no"
+                        style="width: 100%; height: 300px; border: 1px solid #dee2e6; border-radius: 0.25rem;"
+                        data-card-iframe>
+                    </iframe>
+                </div>
+                
+                {# Cardholder Name (not PCI-sensitive) #}
+                <div class="mb-3">
+                    <label for="cardholderName" class="form-label">
+                        {{ 'actionTarget.payment.cardholderName'|trans }}
+                    </label>
+                    <input 
+                        type="text" 
+                        class="form-control" 
+                        id="cardholderName"
+                        name="cardholderName"
+                        required
+                        data-cardholder-name>
+                </div>
+                
+                {# Save Card Option #}
+                {% if page.extension('actionTargetPaymentConfig').enableSavedCards %}
+                    <div class="form-check mb-3">
+                        <input 
+                            class="form-check-input" 
+                            type="checkbox" 
+                            id="saveCard"
+                            name="saveCard"
+                            data-save-card>
+                        <label class="form-check-label" for="saveCard">
+                            {{ 'actionTarget.payment.saveCardForFuture'|trans }}
+                        </label>
+                    </div>
+                {% endif %}
+            </div>
+            
+            {# Hidden field for card token #}
+            <input type="hidden" name="cardToken" data-card-token>
+            
+            {# Loading indicator #}
+            <div class="card-processing-loader d-none" data-processing-loader>
+                <div class="spinner-border spinner-border-sm" role="status">
+                    <span class="visually-hidden">{{ 'actionTarget.payment.processing'|trans }}</span>
+                </div>
+                <span class="ms-2">{{ 'actionTarget.payment.processingCard'|trans }}</span>
+            </div>
+            
+            {# Error display #}
+            <div class="alert alert-danger d-none" data-card-error role="alert"></div>
+        </div>
+    </div>
+</div>
+
+<script>
+// Credit Card Form Handler
+(function() {
+    const form = document.querySelector('[data-credit-card-form]');
+    if (!form) return;
+    
+    const iframe = form.querySelector('[data-card-iframe]');
+    const savedCardSelect = form.querySelector('[data-saved-card-select]');
+    const newCardSection = form.querySelector('[data-new-card-section]');
+    const cardTokenInput = form.querySelector('[data-card-token]');
+    const errorDisplay = form.querySelector('[data-card-error]');
+    const loader = form.querySelector('[data-processing-loader]');
+    
+    // Handle saved card selection
+    if (savedCardSelect) {
+        savedCardSelect.addEventListener('change', function() {
+            if (this.value) {
+                // Using saved card
+                newCardSection.style.display = 'none';
+                cardTokenInput.value = this.value;
+            } else {
+                // Using new card
+                newCardSection.style.display = 'block';
+                cardTokenInput.value = '';
+            }
+        });
+    }
+    
+    // Listen for messages from iframe
+    window.addEventListener('message', function(event) {
+        // Verify origin in production
+        // if (event.origin !== 'https://secure.paymentgate.com') return;
+        
+        const data = event.data;
+        
+        if (data.type === 'cardToken') {
+            // Received card token from iframe
+            cardTokenInput.value = data.token;
+            hideError();
+        } else if (data.type === 'cardError') {
+            // Card validation error
+            showError(data.message);
+        } else if (data.type === 'cardReady') {
+            // Iframe loaded and ready
+            console.log('Card entry iframe ready');
+        }
+    });
+    
+    // Intercept form submission to get card token first
+    const checkoutForm = document.querySelector('#confirmOrderForm');
+    if (checkoutForm) {
+        checkoutForm.addEventListener('submit', function(e) {
+            const selectedPaymentMethod = document.querySelector('input[name="paymentMethodId"]:checked');
+            
+            // Only intercept for credit card payments
+            if (selectedPaymentMethod && selectedPaymentMethod.dataset.handler === 'CreditCardHandler') {
+                if (!cardTokenInput.value) {
+                    e.preventDefault();
+                    
+                    // Request tokenization from iframe
+                    showLoader();
+                    iframe.contentWindow.postMessage({ type: 'tokenize' }, '*');
+                }
+            }
+        });
+    }
+    
+    function showError(message) {
+        errorDisplay.textContent = message;
+        errorDisplay.classList.remove('d-none');
+        hideLoader();
+    }
+    
+    function hideError() {
+        errorDisplay.classList.add('d-none');
+    }
+    
+    function showLoader() {
+        loader.classList.remove('d-none');
+    }
+    
+    function hideLoader() {
+        loader.classList.add('d-none');
+    }
+})();
+</script>
+
+{# @Author Moustafa M S #}

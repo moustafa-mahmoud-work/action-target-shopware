@@ -1,0 +1,126 @@
+{# Saved Payment Methods Management #}
+
+<div class="saved-payment-methods" data-saved-payment-methods>
+    <div class="card mt-3">
+        <div class="card-body">
+            <h6 class="card-subtitle mb-3 text-muted">
+                {{ 'actionTarget.payment.savedMethods.title'|trans }}
+            </h6>
+            
+            {% if page.extension('actionTargetSavedPaymentMethods')|length > 0 %}
+                <div class="list-group">
+                    {% for method in page.extension('actionTargetSavedPaymentMethods') %}
+                        <div class="list-group-item d-flex justify-content-between align-items-center" 
+                             data-payment-method-id="{{ method.id }}">
+                            <div class="d-flex align-items-center">
+                                {# Card brand icon #}
+                                <div class="me-3">
+                                    {% if method.brand == 'visa' %}
+                                        <i class="bi bi-credit-card-2-front text-primary" style="font-size: 1.5rem;"></i>
+                                    {% elseif method.brand == 'mastercard' %}
+                                        <i class="bi bi-credit-card text-danger" style="font-size: 1.5rem;"></i>
+                                    {% elseif method.brand == 'amex' %}
+                                        <i class="bi bi-credit-card text-info" style="font-size: 1.5rem;"></i>
+                                    {% else %}
+                                        <i class="bi bi-credit-card text-secondary" style="font-size: 1.5rem;"></i>
+                                    {% endif %}
+                                </div>
+                                
+                                {# Card details #}
+                                <div>
+                                    <div class="fw-bold">
+                                        {{ method.brand|upper }} •••• {{ method.last4 }}
+                                    </div>
+                                    <small class="text-muted">
+                                        {{ 'actionTarget.payment.expires'|trans }} {{ method.expMonth }}/{{ method.expYear }}
+                                    </small>
+                                </div>
+                            </div>
+                            
+                            {# Delete button #}
+                            <button type="button" 
+                                    class="btn btn-sm btn-outline-danger"
+                                    data-delete-payment-method
+                                    data-method-id="{{ method.id }}"
+                                    title="{{ 'actionTarget.payment.deleteMethod'|trans }}">
+                                <i class="bi bi-trash"></i>
+                            </button>
+                        </div>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <p class="text-muted mb-0">
+                    {{ 'actionTarget.payment.noSavedMethods'|trans }}
+                </p>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+<script>
+// Saved Payment Methods Handler
+(function() {
+    const container = document.querySelector('[data-saved-payment-methods]');
+    if (!container) return;
+    
+    // Handle delete button clicks
+    container.addEventListener('click', function(e) {
+        const deleteBtn = e.target.closest('[data-delete-payment-method]');
+        if (!deleteBtn) return;
+        
+        e.preventDefault();
+        
+        const methodId = deleteBtn.dataset.methodId;
+        const methodItem = deleteBtn.closest('[data-payment-method-id]');
+        
+        if (!confirm('{{ 'actionTarget.payment.confirmDelete'|trans }}')) {
+            return;
+        }
+        
+        // Show loading state
+        deleteBtn.disabled = true;
+        deleteBtn.innerHTML = '<span class="spinner-border spinner-border-sm"></span>';
+        
+        // Delete payment method via AJAX
+        fetch(`/action-target/payment/delete-method/${methodId}`, {
+            method: 'DELETE',
+            headers: {
+                'X-Requested-With': 'XMLHttpRequest',
+                'Content-Type': 'application/json'
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                // Remove from DOM with animation
+                methodItem.style.transition = 'opacity 0.3s';
+                methodItem.style.opacity = '0';
+                setTimeout(() => {
+                    methodItem.remove();
+                    
+                    // Check if no methods left
+                    const remainingMethods = container.querySelectorAll('[data-payment-method-id]');
+                    if (remainingMethods.length === 0) {
+                        const listGroup = container.querySelector('.list-group');
+                        if (listGroup) {
+                            listGroup.innerHTML = '<p class="text-muted mb-0">{{ 'actionTarget.payment.noSavedMethods'|trans }}</p>';
+                        }
+                    }
+                }, 300);
+            } else {
+                alert(data.error || '{{ 'actionTarget.payment.deleteError'|trans }}');
+                deleteBtn.disabled = false;
+                deleteBtn.innerHTML = '<i class="bi bi-trash"></i>';
+            }
+        })
+        .catch(error => {
+            console.error('Error deleting payment method:', error);
+            alert('{{ 'actionTarget.payment.deleteError'|trans }}');
+            deleteBtn.disabled = false;
+            deleteBtn.innerHTML = '<i class="bi bi-trash"></i>';
+        });
+    });
+})();
+</script>
+
+{# @Author Moustafa M S #}
