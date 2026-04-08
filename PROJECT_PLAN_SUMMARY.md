@@ -12,21 +12,6 @@ This project plan outlines the complete development approach for building a Shop
 - PCI-compliant saved payment methods
 - Comprehensive admin management tools
 
-## Project Timeline
-
-**Total Duration**: 14 weeks (3.5 months)
-
-### Phase Breakdown
-- **Weeks 1-2**: Foundation & Database (Plugin structure, entities, migrations)
-- **Weeks 2-4**: Core Payment (Credit card handler, storefront integration)
-- **Weeks 4-5**: Saved Payment Methods (Tokenization, account management)
-- **Weeks 5-7**: Capture/Refund & Sage Integration (Post-authorization operations)
-- **Weeks 7-9**: Alternative Payment Methods & Routing (Net 30, wire, ACH, rules engine)
-- **Weeks 9-11**: Admin Panel & Multi-Shipment (Management UI, partial captures)
-- **Weeks 11-12**: Logging & Messaging (Audit trail, customer communications)
-- **Weeks 12-13**: Testing (Unit, integration, E2E tests)
-- **Weeks 13-14**: Documentation & Deployment (Docs, launch preparation)
-
 ## Key Deliverables
 
 ### 1. Documentation (Completed ✓)
@@ -289,22 +274,22 @@ Available Payment Methods
    - Create composer.json
    - Register with Shopware
 
-### Weekly Milestones
+### Milestones
 
-**Week 1**: Plugin foundation complete, loads in Shopware
-**Week 2**: Database schema implemented, migrations working
-**Week 3**: Credit card authorization functional
-**Week 4**: Storefront checkout integration complete
-**Week 5**: Saved payment methods working
-**Week 6**: Capture and refund operational
-**Week 7**: Sage integration functional
-**Week 8**: Alternative payment methods implemented
-**Week 9**: Payment routing rules working
-**Week 10**: Admin panel complete
-**Week 11**: Multi-shipment support functional
-**Week 12**: Logging and messaging complete
-**Week 13**: All tests passing
-**Week 14**: Documentation complete, ready for deployment
+**Milestone 1**: Plugin foundation complete, loads in Shopware
+**Milestone 2**: Database schema implemented, migrations working
+**Milestone 3**: Credit card authorization functional
+**Milestone 4**: Storefront checkout integration complete
+**Milestone 5**: Saved payment methods working
+**Milestone 6**: Capture and refund operational
+**Milestone 7**: Sage integration functional
+**Milestone 8**: Alternative payment methods implemented
+**Milestone 9**: Payment routing rules working
+**Milestone 10**: Admin panel complete
+**Milestone 11**: Multi-shipment support functional
+**Milestone 12**: Logging and messaging complete
+**Milestone 13**: All tests passing
+**Milestone 14**: Documentation complete, ready for deployment
 
 ## Support & Maintenance Plan
 
@@ -360,20 +345,4 @@ This comprehensive plan provides a clear roadmap for implementing the Action Tar
 
 The plugin will support Action Target's complex payment requirements while maintaining security, reliability, and ease of use for all stakeholders.
 
-## Questions or Concerns?
 
-Before proceeding to implementation, please review:
-- Does the architecture meet all business requirements?
-- Are there any missing payment scenarios?
-- Is the timeline realistic for your needs?
-- Do you have all necessary API documentation?
-- Are there any additional integration points?
-
-Once you're satisfied with the plan, we can switch to **Code mode** to begin implementation!
-
----
-
-**Document Version**: 1.0  
-**Last Updated**: 2026-04-07  
-**Status**: Ready for Review  
-**Next Action**: Stakeholder approval and begin Phase 1
